@@ -1,24 +1,53 @@
 import React, { useRef } from "react";
+import { toast } from "react-toastify";
 
 const Modal = ({ isOpen, onClose }) => {
   const cnicRef = useRef();
   const emailRef = useRef();
   const nameRef = useRef();
+
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const cnic = cnicRef.current.value;
-    const email = emailRef.current.value;
-    const name = nameRef.current.value;
+    const cnic = cnicRef.current.value.trim();
+    const email = emailRef.current.value.trim();
+    const userName = nameRef.current.value.trim();
 
-    console.log("Form Submitted:", { cnic, email, name });
-    onClose();
+    // ✅ Basic validation
+    if (!cnic || !email || !userName) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/signin", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cnic, email, userName }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success("Your request send to admin successfully");
+        console.log("Signup response:", result);
+        onClose();
+      } else {
+        toast.error(result.message || "Signup failed");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Something went wrong");
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-transparent backdrop-blur-sm	 bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-transparent backdrop-blur-sm bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-10 shadow-lg w-full max-w-md relative">
         <button
           onClick={onClose}

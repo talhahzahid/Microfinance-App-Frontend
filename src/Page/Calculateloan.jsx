@@ -1,11 +1,14 @@
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "../Components/Modal";
+import { Link } from "react-router-dom";
 
 const Calculateloan = () => {
   const [subCategory, setSubCategory] = useState("category");
   const [summary, setSummary] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [minVal, setMinVal] = useState(null); // store actual numeric value
+  const [showMinError, setShowMinError] = useState(false);
 
   const categoryRef = useRef();
   const subCategoryRef = useRef();
@@ -17,44 +20,46 @@ const Calculateloan = () => {
     setSubCategory(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const selectedCategory = categoryRef.current.value;
-    const selectedSubCategory = subCategoryRef.current?.value;
-    const amount = parseFloat(amountRef.current.value);
-    const deposit = parseFloat(depositRef.current.value);
-    const loanPeriod = parseFloat(loanPeriodRef.current.value);
-
-    if (isNaN(amount) || isNaN(deposit) || isNaN(loanPeriod)) {
+    const category = categoryRef.current.value;
+    const subcategory = subCategoryRef.current?.value;
+    const amountRequested = parseFloat(amountRef.current.value);
+    const initialDeposit = parseFloat(depositRef.current.value);
+    const durationYears = parseFloat(loanPeriodRef.current.value);
+    if (
+      isNaN(amountRequested) ||
+      isNaN(initialDeposit) ||
+      isNaN(durationYears)
+    ) {
       toast.error("Please fill in all fields correctly");
       return;
     }
-
-    const minDepositVal = amount * 0.3;
-
-    if (deposit < minDepositVal) {
+    const minDepositVal = amountRequested * 0.3;
+    setMinVal(minDepositVal);
+    if (initialDeposit < minDepositVal) {
+      setShowMinError(true);
       toast.error("Provide at least 30% of the loan amount as a deposit");
+    } else {
+      setShowMinError(false);
     }
-
-    const loanAmount = amount - deposit;
-    const monthlyInstallment = loanAmount / (loanPeriod * 12);
-
+    const loanAmount = amountRequested - initialDeposit;
+    const monthlyInstallment = loanAmount / (durationYears * 12);
     const data = {
-      selectedCategory,
-      selectedSubCategory,
-      amount,
-      deposit,
-      loanPeriod,
+      category,
+      subcategory,
+      amountRequested,
+      initialDeposit,
+      durationYears,
       monthlyInstallment: monthlyInstallment.toFixed(0),
       minDeposit: minDepositVal.toFixed(0),
     };
-
     setSummary(data);
+   localStorage.setItem("loanData", JSON.stringify(data));
   };
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50">
+    <div className="min-h-screen py-25">
       <h1 className="text-center text-3xl mb-5 font-medium">Calculate Loan</h1>
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Left Side - Form */}
@@ -130,6 +135,11 @@ const Calculateloan = () => {
               placeholder="Initial Deposit"
               className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-700"
             />
+            {showMinError && minVal && (
+              <span className="text-red-600 text-sm">
+                Minimum deposit required: Rs. {Math.round(minVal)}
+              </span>
+            )}
 
             <input
               ref={loanPeriodRef}
@@ -146,7 +156,6 @@ const Calculateloan = () => {
             </button>
           </form>
         </div>
-
         {/* Right Side - Output */}
         <div className="bg-white shadow-md rounded-xl p-8 w-full">
           <h2 className="text-xl font-semibold mb-6 text-gray-800">
@@ -155,16 +164,22 @@ const Calculateloan = () => {
           <div className="space-y-4 text-gray-700">
             <div className="flex justify-between">
               <span>Money Borrowed:</span>
-              <span>{summary.amount ? `Rs. ${summary.amount}` : "-"}</span>
+              <span>
+                {summary.amountRequested
+                  ? `Rs. ${summary.amountRequested}`
+                  : "-"}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Initial Deposit:</span>
-              <span>{summary.deposit ? `Rs. ${summary.deposit}` : "-"}</span>
+              <span>
+                {summary.initialDeposit ? `Rs. ${summary.initialDeposit}` : "-"}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Loan Period:</span>
               <span>
-                {summary.loanPeriod ? `${summary.loanPeriod} Years` : "-"}
+                {summary.durationYears ? `${summary.durationYears} Years` : "-"}
               </span>
             </div>
             <div className="flex justify-between font-bold text-blue-700">
@@ -175,21 +190,15 @@ const Calculateloan = () => {
                   : "-"}
               </span>
             </div>
-            {summary.deposit >= summary.minDeposit && (
-              <>
-                <div className="flex justify-center mt-6">
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
-                  >
+
+            {summary.initialDeposit >= summary.minDeposit && (
+              <div className="flex justify-center mt-6">
+                <Link to="/loanform">
+                  <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                     Proceed
                   </button>
-                </div>
-                <Modal
-                  isOpen={isModalOpen}
-                  onClose={() => setIsModalOpen(false)}
-                />
-              </>
+                </Link>
+              </div>
             )}
           </div>
         </div>

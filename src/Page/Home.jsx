@@ -28,8 +28,10 @@ const Home = () => {
   return (
     <>
       {/* main container */}
-      <div className="min-h-screen py-10">
-        <h1 className="text-center mb-3 text-2xl font-medium">What Saylani Offer</h1>
+      <div className="min-h-screen py-25">
+        <h1 className="text-center mb-3 text-2xl font-medium">
+          What Loan App Offer
+        </h1>
         <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1  gap-2">
           {categoryList.map((item, index) => {
             return (
