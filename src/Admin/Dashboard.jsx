@@ -91,6 +91,7 @@ const Dashboard = () => {
       </div>
 
       <div className="py-10">
+        <h1 className="font-medium text-xl mb-4">Filtered Application</h1>
         <div className="border p-4 rounded-lg bg-white shadow-lg grid grid-cols-12 gap-2">
           <div className="col-span-4">
             <label htmlFor="cnic" className="mb-3">
