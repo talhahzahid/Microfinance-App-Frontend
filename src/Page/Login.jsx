@@ -9,16 +9,23 @@ const Login = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      console.log("hello");
       const cnic = cnic.current.value;
       const password = password.current.value;
-      const response = await fetch(``);
+      const response = await fetch(``, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cnic, password }),
+      });
       const result = await response.json();
       if (response.ok) {
         console.log(result.message);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 

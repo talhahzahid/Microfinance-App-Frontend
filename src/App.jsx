@@ -8,22 +8,93 @@ import Navbar from "./Components/Navbar";
 import Signup from "./Page/Signup";
 import Loanform from "./Page/Loanform";
 import About from "./Page/About";
+import Dashboard from "./Admin/Dashboard";
+import Sidebar from "./Components/Sidebar";
+import SingleApplication from "./Admin/SingleApplication";
+
+const AppLayout = ({ children }) => (
+  <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+    <Navbar />
+    <ToastContainer position="top-right" autoClose={3000} />
+    {children}
+  </div>
+);
+
+const AdminLayout = ({ children }) => (
+  <div className="flex">
+    <Sidebar />
+    <div className="flex-1 p-6">
+      <ToastContainer position="top-right" autoClose={3000} />
+      {children}
+    </div>
+  </div>
+);
 
 const App = () => {
   return (
     <>
-      <Navbar />
-      <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-        <ToastContainer position="top-right" autoClose={3000} />
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/calculateloan" element={<Calculateloan />} />
-          <Route path="/" element={<Signup />} />
-          <Route path="/loanform" element={<Loanform />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </div>
+      <Routes>
+        {/* Routes WITH Navbar */}
+        <Route
+          path="/"
+          element={
+            <AppLayout>
+              <Signup />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <AppLayout>
+              <Home />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/calculateloan"
+          element={
+            <AppLayout>
+              <Calculateloan />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/loanform"
+          element={
+            <AppLayout>
+              <Loanform />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <AppLayout>
+              <About />
+            </AppLayout>
+          }
+        />
+
+        {/* Route WITHOUT Navbar */}
+        <Route
+          path="/dashboard"
+          element={
+            <AdminLayout>
+              <Dashboard />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/singleApplication/:id"
+          element={
+            <AdminLayout>
+              <SingleApplication />
+            </AdminLayout>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </>
   );
 };

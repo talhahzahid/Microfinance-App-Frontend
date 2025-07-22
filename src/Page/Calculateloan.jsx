@@ -55,7 +55,7 @@ const Calculateloan = () => {
       minDeposit: minDepositVal.toFixed(0),
     };
     setSummary(data);
-   localStorage.setItem("loanData", JSON.stringify(data));
+    localStorage.setItem("loanData", JSON.stringify(data));
   };
 
   return (
@@ -124,6 +124,7 @@ const Calculateloan = () => {
 
             <input
               ref={amountRef}
+              min={1}
               type="number"
               placeholder="Amount (PKR)"
               className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-700"
@@ -131,6 +132,7 @@ const Calculateloan = () => {
 
             <input
               ref={depositRef}
+              min={1}
               type="number"
               placeholder="Initial Deposit"
               className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-700"
@@ -140,9 +142,9 @@ const Calculateloan = () => {
                 Minimum deposit required: Rs. {Math.round(minVal)}
               </span>
             )}
-
             <input
               ref={loanPeriodRef}
+              min={1}
               type="number"
               placeholder="Loan Period (in years)"
               className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-700"
