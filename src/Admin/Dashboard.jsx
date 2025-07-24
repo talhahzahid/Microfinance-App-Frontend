@@ -135,6 +135,7 @@ const Dashboard = () => {
                   <th className="px-4 py-2 border">CNIC</th>
                   <th className="px-4 py-2 border">City</th>
                   <th className="px-4 py-2 border">Status</th>
+                  
                   <th className="px-4 py-2 border">View</th>
                 </tr>
               </thead>
