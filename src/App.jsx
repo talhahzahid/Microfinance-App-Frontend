@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./Page/Login";
 import Home from "./Page/Home";
 import Calculateloan from "./Page/Calculateloan";
-import { ToastContainer } from "react-toastify";
 import Navbar from "./Components/Navbar";
 import Signup from "./Page/Signup";
 import Loanform from "./Page/Loanform";
@@ -11,38 +10,32 @@ import About from "./Page/About";
 import Dashboard from "./Admin/Dashboard";
 import Sidebar from "./Components/Sidebar";
 import SingleApplication from "./Admin/SingleApplication";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // ✅ Import styles globally
 
+// Layout with Navbar
 const AppLayout = ({ children }) => (
   <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
     <Navbar />
-    <ToastContainer position="top-right" autoClose={3000} />
     {children}
   </div>
 );
 
+// Layout for Admin Panel
 const AdminLayout = ({ children }) => (
   <div className="flex">
-    <Sidebar />
-    <div className="flex-1 p-6">
-      <ToastContainer position="top-right" autoClose={3000} />
-      {children}
-    </div>
+    <div className="flex-1 p-6">{children}</div>
   </div>
 );
 
 const App = () => {
   return (
     <>
+      {/* ✅ Toast container globally available */}
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <Routes>
         {/* Routes WITH Navbar */}
-        <Route
-          path="/"
-          element={
-            <AppLayout>
-              <Signup />
-            </AppLayout>
-          }
-        />
         <Route
           path="/home"
           element={
@@ -76,7 +69,7 @@ const App = () => {
           }
         />
 
-        {/* Route WITHOUT Navbar */}
+        {/* Admin Routes WITHOUT Navbar */}
         <Route
           path="/dashboard"
           element={
@@ -93,7 +86,10 @@ const App = () => {
             </AdminLayout>
           }
         />
+
+        {/* Public Routes without Navbar */}
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Signup />} />
       </Routes>
     </>
   );

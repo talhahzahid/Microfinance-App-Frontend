@@ -18,19 +18,26 @@ const Signup = () => {
     console.log(userName);
     try {
       setLoading(true);
-      const response = await fetch(``, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ cnic, email, userName }),
-      });
+      const response = await fetch(
+        `https://microfinance-app-backend-rho.vercel.app/api/v1/signin`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cnic, email, userName }),
+        }
+      );
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
-        toast.success("Your Account Create Successfully Check Your Email");
-        navigate("/home");
+        toast.success("Your Account Created Successfully. Check your Email.");
+        Cnic.current.value = "";
+        Email.current.value = "";
+        Username.current.value = "";
+        navigate("/login");
       } else {
-        toast.error(data.message);
+        toast.error(data?.message || "Something went wrong.");
       }
     } catch (error) {
       console.log(error);
@@ -101,7 +108,7 @@ const Signup = () => {
             />
             <button className="px-9 py-2 bg-blue-700 rounded-lg text-white w-full ">
               {loading ? (
-                <Loader2 className="animate-spin h-5 w-5 " />
+                <Loader2 className="animate-spin h-5 w-5 text-center " />
               ) : (
                 "Submit"
               )}

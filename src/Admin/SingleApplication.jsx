@@ -44,7 +44,7 @@ const SingleApplication = () => {
   const getSingleApplication = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v2/loanform/${id}`,
+        `https://microfinance-app-backend-rho.vercel.app/api/v2/loanform/${id}`,
         {
           method: "GET",
           headers: {
@@ -100,7 +100,7 @@ const SingleApplication = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v2/loanform/status/${id}`,
+        `https://microfinance-app-backend-rho.vercel.app/api/v2/loanform/status/${id}`,
         {
           method: "PUT",
           headers: {

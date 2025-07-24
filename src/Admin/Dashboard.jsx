@@ -20,13 +20,15 @@ const Dashboard = () => {
 
   const viewAllApplication = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/v2/viewrequest`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
+      const response = await fetch(
+        `https://microfinance-app-backend-rho.vercel.app/api/v2/viewrequest`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         setAllApplication(data.getAllForm);
@@ -41,7 +43,7 @@ const Dashboard = () => {
   const viewLoanStats = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8000/api/v2/loanform/stats",
+        "https://microfinance-app-backend-rho.vercel.app/api/v2/loanform/stats",
         {
           method: "GET",
           headers: {
@@ -154,7 +156,18 @@ const Dashboard = () => {
                     <td className="px-4 py-2 border">
                       {item.applicantInfo?.city || "-"}
                     </td>
-                    <td className="px-4 py-2 border">{item?.status || "-"}</td>
+                    <td
+                      className={`px-4 py-2 border font-semibold ${
+                        item?.status === "approved"
+                          ? "text-green-600"
+                          : item?.status === "rejected"
+                          ? "text-red-600"
+                          : "text-yellow-600"
+                      }`}
+                    >
+                      {item?.status?.charAt(0).toUpperCase() +
+                        item?.status?.slice(1)}
+                    </td>
                     <td className="px-4 py-2 border cursor-pointer">
                       <Link to={`/singleApplication/${item._id}`}>
                         <EyeIcon className="h-5 w-5" />

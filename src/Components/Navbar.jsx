@@ -28,9 +28,9 @@ const Navbar = () => {
             >
               Request a loan
             </Link>
-            <Link to="/login" className="text-gray-700 hover:text-blue-700">
-              Login
-            </Link>
+            {/* <Link to="/login" className="text-gray-700 hover:text-blue-700">
+              Logout
+            </Link> */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -67,13 +67,13 @@ const Navbar = () => {
           >
             Request a loan
           </Link>
-          <Link
+          {/* <Link
             to="/login"
             onClick={toggleMenu}
             className="block py-2 text-gray-700 hover:text-blue-700"
           >
             Login
-          </Link>
+          </Link> */}
         </div>
       )}
     </nav>
