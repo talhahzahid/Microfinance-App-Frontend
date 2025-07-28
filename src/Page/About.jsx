@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const About = () => {
   return (
@@ -55,11 +56,13 @@ const About = () => {
         </p>
 
         <p class="text-lg leading-relaxed">
-          Thank you for considering <strong>Loan App</strong>. We
-          look forward to helping you take your next big step — today, tomorrow,
-          and beyond.
+          Thank you for considering <strong>Loan App</strong>. We look forward
+          to helping you take your next big step — today, tomorrow, and beyond.
         </p>
       </section>
+      <Link to="/dashboard">
+        <button>dashboard</button>
+      </Link>
     </>
   );
 };
