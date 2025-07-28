@@ -1,6 +1,6 @@
 import { Loader2 } from "lucide-react";
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const Signup = () => {
   const [loading, setLoading] = useState(false);
@@ -79,7 +79,7 @@ const Signup = () => {
           <form
             onSubmit={handleSubmit}
             action=""
-            className="flex flex-col gap-3 items-center bg-white shadow-xl  p-15 rounded-2xl w-full max-w-md"
+            className="flex flex-col gap-3 items-center bg-white shadow-2xl  p-15 rounded-2xl w-full max-w-md"
           >
             <h1
               className="font-medium text-2xl"
@@ -108,11 +108,16 @@ const Signup = () => {
             />
             <button className="px-9 py-2 bg-blue-700 rounded-lg text-white w-full ">
               {loading ? (
-                <Loader2 className="animate-spin h-5 w-5 text-center " />
+                <Loader2 className="animate-spin h-5 w-5 mx-auto text-center " />
               ) : (
                 "Submit"
               )}
             </button>
+            <Link to="/login">
+              <h1 className="text-blue-800">
+                Already have an account ? <span>Login</span>
+              </h1>
+            </Link>
           </form>
         </div>
       </div>

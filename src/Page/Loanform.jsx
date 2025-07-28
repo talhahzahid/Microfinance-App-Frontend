@@ -1,18 +1,21 @@
 import { Loader } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Loanform = () => {
   const [loanDetail, setLoanDetails] = useState({});
   const [Loading, setLoading] = useState(false);
-
-  // Load loan data from localStorage
+  const navigate = useNavigate();
   useEffect(() => {
     const loanData = JSON.parse(localStorage.getItem("loanData")) || {};
     setLoanDetails(loanData);
+    return () => {
+      localStorage.removeItem("loanData");
+      console.log("Component unmounted — loanData removed.");
+    };
   }, []);
 
-  // Log when loan details update
   useEffect(() => {
     console.log("Updated loan details:", loanDetail);
   }, [loanDetail]);
@@ -44,82 +47,80 @@ const Loanform = () => {
   const g2CnicRef = useRef();
   const g2DobRef = useRef();
   const g2AddressRef = useRef();
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const formData = {
-    // application details
-    applicant: {
-      fullName: fullNameRef.current.value,
-      fatherName: fatherNameRef.current.value,
-      cnic: applicantCnicRef.current.value,
-      dob: dobRef.current.value,
-      gender: genderRef.current.value,
-      email: applicantEmailRef.current.value,
-      phone: phoneRef.current.value,
-      city: cityRef.current.value,
-      address: addressRef.current.value,
-    },
-    // loan details
-    loanDetails: {
-      loanType: loanDetail.category,
-      loanPurpose: loanDetail.subcategory,
-      durationMonths: loanDetail.durationYears,
-      loanAmount: loanDetail.initialDeposit,
-      monthlyInstalment: loanDetail.monthlyInstallment,
-      minDeposit: loanDetail.minDeposit,
-    },
-    // guardians details
-    guardians: [
-      {
-        fullName: g1FullNameRef.current.value,
-        relation: g1RelationRef.current.value,
-        email: g1EmailRef.current.value,
-        phone: g1PhoneRef.current.value,
-        cnic: g1CnicRef.current.value,
-        dob: g1DobRef.current.value,
-        address: g1AddressRef.current.value,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = {
+      applicantInfo: {
+        fullName: fullNameRef.current.value,
+        fatherName: fatherNameRef.current.value,
+        cnic: applicantCnicRef.current.value,
+        dateOfBirth: dobRef.current.value,
+        gender: genderRef.current.value,
+        email: applicantEmailRef.current.value,
+        phone: phoneRef.current.value,
+        city: cityRef.current.value,
+        address: addressRef.current.value,
       },
-      {
-        fullName: g2FullNameRef.current.value,
-        relation: g2RelationRef.current.value,
-        email: g2EmailRef.current.value,
-        phone: g2PhoneRef.current.value,
-        cnic: g2CnicRef.current.value,
-        dob: g2DobRef.current.value,
-        address: g2AddressRef.current.value,
+      loanDetails: {
+        loanType: loanDetail.category,
+        loanPurpose: loanDetail.subcategory,
+        durationMonths: loanDetail.durationYears,
+        loanAmount: loanDetail.initialDeposit,
+        monthlyInstalment: loanDetail.monthlyInstallment,
+        minDeposit: loanDetail.minDeposit,
       },
-    ],
-  };
-
-  setLoading(true);
-
-  try {
-    const response = await fetch(
-      `https://microfinance-app-backend-rho.vercel.app/api/v2/addLoan`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      guardians: [
+        {
+          fullName: g1FullNameRef.current.value,
+          relation: g1RelationRef.current.value,
+          email: g1EmailRef.current.value,
+          phone: g1PhoneRef.current.value,
+          cnic: g1CnicRef.current.value,
+          Dob: g1DobRef.current.value, // ✅ capital D
+          address: g1AddressRef.current.value,
         },
-        body: JSON.stringify(formData), // ✅ Don't wrap in { formData }
-      }
-    );
+        {
+          fullName: g2FullNameRef.current.value,
+          relation: g2RelationRef.current.value,
+          email: g2EmailRef.current.value,
+          phone: g2PhoneRef.current.value,
+          cnic: g2CnicRef.current.value,
+          Dob: g2DobRef.current.value, // ✅ capital D
+          address: g2AddressRef.current.value,
+        },
+      ],
+    };
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://microfinance-app-backend-rho.vercel.app/api/v2/addLoan`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-    const result = await response.json();
-    console.log(result)
-    if (response.ok) {
-      toast.success(result.message || "Loan application submitted successfully.");
-    } else {
-      toast.error(result.error || "Failed to submit application.");
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok) {
+        toast.success(
+          result.message || "Loan application submitted successfully."
+        );
+        navigate("/home");
+      } else {
+        toast.error(result.error || "Failed to submit application.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      toast.error("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Network error:", error);
-    toast.error("Network error. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="py-25 min-h-screen grid grid-cols-12 gap-5 px-4">
@@ -391,7 +392,7 @@ const handleSubmit = async (e) => {
               className="px-3 py-2 w-full bg-blue-700 rounded-lg text-white"
             >
               {Loading ? (
-                <Loader className="animate-spin h-5 w-5" />
+                <Loader className="animate-spin h-5 w-5 m-auto" />
               ) : (
                 "Submit Application"
               )}

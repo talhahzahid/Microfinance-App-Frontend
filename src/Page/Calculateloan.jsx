@@ -196,7 +196,7 @@ const Calculateloan = () => {
             {summary.initialDeposit >= summary.minDeposit && (
               <div className="flex justify-center mt-6">
                 <Link to="/loanform">
-                  <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                  <button className="bg-green-600 cursor-pointer text-white px-6 py-2 rounded hover:bg-green-700">
                     Proceed
                   </button>
                 </Link>

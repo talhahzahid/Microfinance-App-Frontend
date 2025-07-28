@@ -1,12 +1,13 @@
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const SingleApplication = () => {
   const [loading, setLoading] = useState(false);
   const [loadingReject, setLoadingReject] = useState(false);
+  const navigate = useNavigate();
   const fullNameRef = useRef();
   const fatherNameRef = useRef();
   const applicantCnicRef = useRef();
@@ -112,6 +113,7 @@ const SingleApplication = () => {
       const result = await response.json();
       if (response.ok) {
         toast.success(result.message);
+        navigate("/dashboard");
       }
     } catch (error) {
       console.log(error);
